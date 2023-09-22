@@ -3,11 +3,17 @@ from django.db import models
 # Create your models here.
 class Clientes(models.Model):
     nombre=models.CharField(max_length=30)
-    direccion=models.CharField(max_length=50)
+    #Con el verbose_name hacemos que en el panel de control use este nuevo nombre en lugar del de la variable
+    direccion=models.CharField(max_length=50,verbose_name='Tu Direccion')
     #Hacemos que no sea un campo obligatorio con el blank=True y el null = True
-    #Como hemos modificado una clase tenemos que migrar... makemigrations y migrate
+    #Como hemos modificado una clase tenem
+    #os que migrar... makemigrations y migrate
     email=models.EmailField(blank=True, null=True)
     tfno=models.CharField(max_length=9)
+    
+    def __str__(self): #Usamos funcion __str__ para cque nos devuelva un string
+        return self.nombre
+    #queremos que se vea el nombre en el panel de control tenemos que hacer migraciones
 
 class Articulos(models.Model):
     nombre=models.CharField(max_length=30)
