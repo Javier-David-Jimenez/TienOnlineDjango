@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from gestionPedidos.models import Articulos
 from django.core.mail import send_mail
 from django.conf import settings
+from gestionPedidos.forms import FormularioContacto
 # Create your views here.
 
 def busqueda_productos(request):
@@ -35,13 +36,27 @@ def buscar(request):
 def contacto(request):
     if request.method=="POST":
         
+        miformulario = FormularioContacto(request.POST)
+        
+        if miformulario.is_valid():
+            inform = miformulario.cleaned_data
+            send_mail(inform['asunto'],inform ['mensaje'],
+            inform.get ('email','djangomaster2023@gmail.com'),['djangomaster2023@gmail.com'],)
+
+            return render(request, "gracias.html")
+    else:
+        miformulario = FormularioContacto()
+        
+    return render(request, "formulario_contacto.html", {"form":miformulario})
+        
+    """ pasamos de crear un formulario a utilizar una clase que crea formularios
         subject = request.POST["asunto"]
         message = request.POST["mensaje"]+ " "+request.POST["email"]
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ["djangomaster2023@gmail.com"]
         send_mail(subject, message, email_from, recipient_list)
             
-        return render(request, "gracias.html" )
+        return render(request, "gracias.html" )"""
     
     return render(request, "contacto.html")
 #La primera vez leera el contacto.html y la segunada nos enviara a gracias.html.
